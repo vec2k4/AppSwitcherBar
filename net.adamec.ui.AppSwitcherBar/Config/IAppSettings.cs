@@ -42,6 +42,8 @@ public interface IAppSettings
     /// </summary>
     int AppBarMinHeight { get; }
 
+    int AppBarMaxRows { get; }
+
     /// <summary>
     /// Flag whether to redraw the application bar on resize drag (true) or just when the drag is completed (false)
     /// </summary>
@@ -53,7 +55,7 @@ public interface IAppSettings
     int AppBarButtonWidth { get; }
 
     /// <summary>
-    /// Minimal width ration for the button representing the (task bar) window when auto size 
+    /// Minimal width ration for the button representing the (task bar) window when auto size
     /// </summary>
     double AppBarButtonMinWidthRatio { get; }
 
@@ -152,8 +154,8 @@ public interface IAppSettings
     /// <summary>
     /// Flag whether the application will allow user to change the order of the buttons representing the (task bar) windows
     /// </summary>
-    bool AllowAppBarButtonReorder { get; } 
-   
+    bool AllowAppBarButtonReorder { get; }
+
     /// <summary>
     /// Flag whether to show buttons ("pins") for applications pinned to the task bar when they have no window open
     /// </summary>

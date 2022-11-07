@@ -51,6 +51,8 @@ namespace net.adamec.ui.AppSwitcherBar.Config
         /// </summary>
         public int AppBarMinHeight { get; set; } = 50;
 
+        public int AppBarMaxRows { get; set; } = 2;
+
         /// <summary>
         /// Delay (in milliseconds) before the window (task bar application) thumbnail is shown (default is 400)
         /// </summary>

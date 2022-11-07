@@ -68,9 +68,9 @@
         </Thumb>
 
         <!-- Controls (button) bar -->
-        <StackPanel Orientation="Horizontal" Margin="1" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <StackPanel.Style>
-                <Style TargetType="{x:Type StackPanel}">
+        <WrapPanel Orientation="Horizontal" Margin="1" VerticalAlignment="Top" HorizontalAlignment="Left" MaxWidth="75">
+            <WrapPanel.Style>
+                <Style TargetType="{x:Type WrapPanel}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Path=DockMode, ElementName=Root}" Value="Left">
                             <Setter Property="DockPanel.Dock" Value="Top" />
@@ -86,7 +86,7 @@
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
-            </StackPanel.Style>
+            </WrapPanel.Style>
             <Button Click="Close" Margin="1" Width="18" Height="18">
                 <Button.Style>
                     <Style TargetType="Button">
@@ -132,8 +132,30 @@
                     </Style>
                 </ToggleButton.Style>
             </ToggleButton>
+            <ToggleButton Margin="1" Width="18" Height="18"
+                          IsChecked="{Binding IsInSearch}" x:Name="SearchToggle"
+                          Visibility="{Binding Settings.AllowSearch, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <ToggleButton.Style>
+                    <Style TargetType="ToggleButton">
+                        <Setter Property="Content" Value="{iconPacks:BootstrapIcons Kind=Search, Width=13, Height=13}" />
+                        <Setter Property="Foreground" Value="LightGray" />
+                        <Setter Property="Background" Value="#222535" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ToggleButton.Style>
+            </ToggleButton>
             <ToggleButton x:Name="TaskbarToggle" Margin="1" Width="18" Height="18"
-                          IsChecked="{Binding IsWindowsTaskbarHidden}">
+                          IsChecked="{Binding IsWindowsTaskbarHidden}" ToolTip="{Binding TaskbarToggleButtonTooltip}">
                 <ToggleButton.Style>
                     <Style TargetType="ToggleButton">
                         <Setter Property="Content" Value="{iconPacks:BootstrapIcons Kind=Eye, Width=15, Height=15}" />
@@ -158,12 +180,12 @@
                     </Style>
                 </ToggleButton.Style>
             </ToggleButton>
-            <ToggleButton Margin="1" Width="18" Height="18"
-                          IsChecked="{Binding IsInSearch}" x:Name="SearchToggle"
-                          Visibility="{Binding Settings.AllowSearch, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+            <ToggleButton x:Name="ScreensaverToggle" Margin="1" Width="18" Height="18"
+                          IsChecked="{Binding IsScreensaverDisabled}" ToolTip="{Binding ScreensaverToggleButtonTooltip}">
                 <ToggleButton.Style>
                     <Style TargetType="ToggleButton">
-                        <Setter Property="Content" Value="{iconPacks:BootstrapIcons Kind=Search, Width=13, Height=13}" />
+                        <Setter Property="Content" Value="{iconPacks:BootstrapIcons Kind=Stars, Width=15, Height=15}" />
                         <Setter Property="Foreground" Value="LightGray" />
                         <Setter Property="Background" Value="#222535" />
                         <Setter Property="Template">
@@ -177,10 +199,15 @@
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Content" Value="{iconPacks:BootstrapIcons Kind=SunFill, Width=15, Height=15}" />
+                            </Trigger>
+                        </Style.Triggers>
                     </Style>
                 </ToggleButton.Style>
             </ToggleButton>
-        </StackPanel>
+        </WrapPanel>
 
         <!-- Settings panel -->
         <WrapPanel Margin="1" d:Visibility="Visible">
@@ -455,6 +482,7 @@
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <appBar:AppButtonsPanel
+                            MaxRows="{Binding Path=Settings.AppBarMaxRows, ElementName=Root}"
                             ButtonHeight="{Binding Path=Settings.AppBarButtonHeight, ElementName=Root}"
                             ButtonMaxWidth="{Binding Path=Settings.AppBarButtonWidth, ElementName=Root}"
                             ButtonMinWidthRatio="0.7"

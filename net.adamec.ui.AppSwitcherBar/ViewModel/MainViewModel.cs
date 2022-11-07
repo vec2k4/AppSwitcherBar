@@ -165,9 +165,39 @@ namespace net.adamec.ui.AppSwitcherBar.ViewModel
                         Application.Current.MainWindow.Focus();
                     }
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(TaskbarToggleButtonTooltip));
                 }
             }
         }
+
+        public string TaskbarToggleButtonTooltip => isWindowsTaskbarHidden ? "Taskbar hidden" : "Taskbar visible";
+
+
+        private bool isScreensaverDisabled;
+
+        public bool IsScreensaverDisabled
+        {
+            get => isScreensaverDisabled;
+            set
+            {
+                if (isScreensaverDisabled != value)
+                {
+                    isScreensaverDisabled = value;
+                    if (isScreensaverDisabled)
+                    {
+                        Screensaver.DisableScreensaver();
+                    }
+                    else
+                    {
+                        Screensaver.EnableScreensaver();
+                    }
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(ScreensaverToggleButtonTooltip));
+                }
+            }
+        }
+
+        public string ScreensaverToggleButtonTooltip => isScreensaverDisabled ? "Screensaver disabled" : "Screensaver enabled";
 
         private string currentDate = "dd.MM.YYYY";
 
@@ -407,8 +437,6 @@ namespace net.adamec.ui.AppSwitcherBar.ViewModel
             backgroundInitWorker.DoWork += (_, eventArgs) => { eventArgs.Result = RetrieveBackgroundData(); };
             backgroundInitWorker.RunWorkerCompleted += (_, eventArgs) => { OnBackgroundDataRetrieved((BackgroundData)eventArgs.Result!); };
             this.startupService = startupService;
-
-            DateTimeRefresh.StartRefreshing(this);
         }
 
 

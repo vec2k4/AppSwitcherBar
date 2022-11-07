@@ -24,6 +24,8 @@ namespace net.adamec.ui.AppSwitcherBar
                 Loaded += (_, _) =>
                 {
                     Taskbar.Show();
+                    DateTimeRefresh.StartRefreshing(viewModel);
+                    viewModel.IsScreensaverDisabled = true;
                     viewModel.Init(Hwnd);
                 };
             }
@@ -33,6 +35,7 @@ namespace net.adamec.ui.AppSwitcherBar
         {
             Taskbar.StopTaskbarVisibilityRefresh();
             DateTimeRefresh.StopRefreshing();
+            Screensaver.EnableScreensaver();
             base.OnClosing(e);
         }
     }

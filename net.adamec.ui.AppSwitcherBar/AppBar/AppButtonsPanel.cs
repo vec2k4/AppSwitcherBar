@@ -16,7 +16,7 @@ namespace net.adamec.ui.AppSwitcherBar.AppBar;
 public class AppButtonsPanel : WrapPanel
 {
     /// <summary>
-    /// Flag whether drag and drop operation is active 
+    /// Flag whether drag and drop operation is active
     /// </summary>
     private bool isDragging;
     /// <summary>
@@ -149,6 +149,23 @@ public class AppButtonsPanel : WrapPanel
         new FrameworkPropertyMetadata(new Thickness(1)));
 
     /// <summary>
+    /// Maximum rows
+    /// </summary>
+    public int MaxRows
+    {
+        get => (int)GetValue(MaxRowsProperty);
+        set => SetValue(MaxRowsProperty, value);
+    }
+    /// <summary>
+    /// Maximum rows
+    /// </summary>
+    public static readonly DependencyProperty MaxRowsProperty = DependencyProperty.Register(
+        nameof(MaxRows),
+        typeof(int),
+        typeof(AppButtonsPanel),
+        new FrameworkPropertyMetadata(2));
+
+    /// <summary>
     /// Get's the window buttons within the panel
     /// </summary>
     private List<AppButton> AppButtons => WpfTools.AllChildren<AppButton>(this);
@@ -208,36 +225,54 @@ public class AppButtonsPanel : WrapPanel
         // - for single column use max button width, when multi-column use min button width
 
         var containerWidth = (int)constraint.Width;
-        if (containerWidth <= 0 || double.IsPositiveInfinity(containerWidth)) return new Size(double.PositiveInfinity, double.PositiveInfinity); //Can't count, request max available size
+        if (containerWidth <= 0 || double.IsPositiveInfinity(containerWidth))
+            return new Size(double.PositiveInfinity, double.PositiveInfinity); //Can't count, request max available size
 
         var minButtonWidth = ButtonMinWidth;
         var maxButtonWidth = ButtonMaxWidth;
         var minButtonWidthWithMargin = minButtonWidth + ButtonMargin.Left + ButtonMargin.Right;
+        var maxButtonWidthWithMargin = maxButtonWidth + ButtonMargin.Left + ButtonMargin.Right;
 
-        var maxColumns = (int)(containerWidth / minButtonWidthWithMargin);
         var cnt = Children.Count;
-        if (maxColumns < 1 || cnt < 1) return new Size(double.PositiveInfinity, double.PositiveInfinity); //Can't count, request max available
+        if (cnt < 1)
+            return new Size(double.PositiveInfinity, double.PositiveInfinity); //Can't count, request max available
 
-        var rows = (int)((double)(cnt - 1) / maxColumns) + 1; //round up
-        var columns = (int)((double)(cnt - 1) / rows) + 1; //round up
+        var maxColumnsForMaxButtonWidth = (int)(containerWidth / maxButtonWidthWithMargin);
+        var rows = (int)((double)(cnt - 1) / maxColumnsForMaxButtonWidth) + 1; //round up
+        if (rows > MaxRows)
+            rows = MaxRows;
+        var slotsAvailableForMaxButtonWidth = rows * maxColumnsForMaxButtonWidth;
+        ItemWidth = maxButtonWidthWithMargin;
+        ItemHeight = (int)(ButtonHeight + ButtonMargin.Top + ButtonMargin.Bottom);
+        if (slotsAvailableForMaxButtonWidth < cnt)
+        {
+            var maxColumnsForMinButtonWidth = (int)(containerWidth / minButtonWidthWithMargin);
+            if (maxColumnsForMinButtonWidth < 1)
+                return new Size(double.PositiveInfinity, double.PositiveInfinity); //Can't count, request max available
 
-        var newButtonWidthWithMargin = (int)((double)containerWidth / columns); //round down
-        var newButtonWidth = newButtonWidthWithMargin - ButtonMargin.Left - ButtonMargin.Right;
+            rows = (int)((double)(cnt - 1) / maxColumnsForMinButtonWidth) + 1; //round up
+            if (rows > MaxRows)
+                rows = MaxRows;
+            var columns = (int)((double)(cnt - 1) / rows) + 1; //round up
 
-        if (newButtonWidth > maxButtonWidth) newButtonWidth = maxButtonWidth;
-        if (newButtonWidth < minButtonWidth) newButtonWidth = minButtonWidth; //should not happen
+            var newButtonWidthWithMargin = (int)((double)containerWidth / columns); //round down
+            var newButtonWidth = newButtonWidthWithMargin - ButtonMargin.Left - ButtonMargin.Right;
 
-        var newItemWidth = (int)(newButtonWidth + ButtonMargin.Left + ButtonMargin.Right);
-        var newItemHeight = (int)(ButtonHeight + ButtonMargin.Top + ButtonMargin.Bottom);
+            if (newButtonWidth > maxButtonWidth) newButtonWidth = maxButtonWidth;
+            if (newButtonWidth < minButtonWidth) newButtonWidth = minButtonWidth; //should not happen
 
-        if (newItemWidth != (int)ItemWidth) ItemWidth = newItemWidth;
-        if (newItemHeight != (int)ItemHeight) ItemHeight = newItemHeight;
+            var newItemWidth = (int)(newButtonWidth + ButtonMargin.Left + ButtonMargin.Right);
+            var newItemHeight = (int)(ButtonHeight + ButtonMargin.Top + ButtonMargin.Bottom);
 
-        var requiredContainerHeight = ItemHeight * rows;
+            if (newItemWidth != (int)ItemWidth) ItemWidth = newItemWidth;
+            if (newItemHeight != (int)ItemHeight) ItemHeight = newItemHeight;
 
 #if DEBUG
-        Debug.WriteLine($"Measure(H): container:{containerWidth:####}, cnt:{cnt},mc:{maxColumns}, c:{columns}, r:{rows}, iw:{newItemWidth}, ih:{newItemHeight}");
+            Debug.WriteLine($"Measure(H): container:{containerWidth:####}, cnt:{cnt},mc:{maxColumnsForMinButtonWidth}, c:{columns}, r:{rows}, iw:{newItemWidth}, ih:{newItemHeight}");
 #endif
+        }
+
+        var requiredContainerHeight = ItemHeight * rows;
 
         return new Size(containerWidth, requiredContainerHeight);
     }
@@ -445,7 +480,7 @@ public class AppButtonsPanel : WrapPanel
 #endif
         }
 
-        //set cursor 
+        //set cursor
         // when dragging over button, signal the direction where the dragged button (group) will be placed
         // when dragging not-over button, signal the "wrong" target
         // when not dragging, set default Arrow button

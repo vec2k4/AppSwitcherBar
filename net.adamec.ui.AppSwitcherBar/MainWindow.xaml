@@ -14,6 +14,7 @@
     mc:Ignorable="d ignore"
     x:Name="Root"
     Title="MainWindow"
+    Background="#1E1E1E"
     Icon="/AppSwitcherBar.ico" >
     <appBar:AppBarWindow.Resources>
         <viewModel:ViewModelLocator x:Key="ViewModelLocator" />
@@ -23,7 +24,7 @@
         <Binding Source="{StaticResource ViewModelLocator}" Path="MainViewModel" />
     </appBar:AppBarWindow.DataContext>
 
-    <DockPanel >
+    <DockPanel Margin="0,-2,0,0">
         <DockPanel.Style>
             <Style TargetType="{x:Type DockPanel}">
                 <Style.Triggers>
@@ -37,7 +38,7 @@
             </Style>
         </DockPanel.Style>
         <!-- Resize Thumb -->
-        <Thumb Background="Gray" DragCompleted="ResizeDragCompleted" DragDelta="ResizeDragDelta" DragStarted="ResizeDragStarted" appBar:AppBarWindow.BarAutoSize="Add">
+        <Thumb Background="Gray" Visibility="Hidden" DragCompleted="ResizeDragCompleted" DragDelta="ResizeDragDelta" DragStarted="ResizeDragStarted" appBar:AppBarWindow.BarAutoSize="Add">
             <Thumb.Style>
                 <Style TargetType="{x:Type Thumb}">
                     <Style.Triggers>
@@ -67,7 +68,7 @@
         </Thumb>
 
         <!-- Controls (button) bar -->
-        <StackPanel Orientation="Horizontal" Margin="3" VerticalAlignment="Top" HorizontalAlignment="Left">
+        <StackPanel Orientation="Horizontal" Margin="1" VerticalAlignment="Top" HorizontalAlignment="Left">
             <StackPanel.Style>
                 <Style TargetType="{x:Type StackPanel}">
                     <Style.Triggers>
@@ -86,15 +87,103 @@
                     </Style.Triggers>
                 </Style>
             </StackPanel.Style>
-            <Button Click="Close" Content="{iconPacks:BootstrapIcons Kind=X, Width=13, Height=13 }" Margin="1" Width="18" Height="18"/>
-            <ToggleButton Content="{iconPacks:BootstrapIcons Kind=Gear, Width=13, Height=13}" x:Name="SettingToggle" Margin="1" Width="18" Height="18" />
-            <ToggleButton Content="{iconPacks:BootstrapIcons Kind=Search, Width=13, Height=13}" Margin="1" Width="18" Height="18"
-                          IsChecked="{Binding IsInSearch}" x:Name="SearchToggle" 
-                          Visibility="{Binding Settings.AllowSearch, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <Button Click="Close" Margin="1" Width="18" Height="18">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Content" Value="{iconPacks:BootstrapIcons Kind=X, Width=13, Height=13}" />
+                        <Setter Property="Foreground" Value="LightGray" />
+                        <Setter Property="Background" Value="#222535" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <ToggleButton Content="{iconPacks:BootstrapIcons Kind=Gear, Width=13, Height=13}" x:Name="SettingToggle" Margin="1" Width="18" Height="18">
+                <ToggleButton.Style>
+                    <Style TargetType="ToggleButton">
+                        <Setter Property="Content" Value="{iconPacks:BootstrapIcons Kind=Gear, Width=13, Height=13}" />
+                        <Setter Property="Foreground" Value="LightGray" />
+                        <Setter Property="Background" Value="#222535" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Content" Value="{iconPacks:BootstrapIcons Kind=EyeSlash, Width=15, Height=15}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ToggleButton.Style>
+            </ToggleButton>
+            <ToggleButton x:Name="TaskbarToggle" Margin="1" Width="18" Height="18"
+                          IsChecked="{Binding IsWindowsTaskbarHidden}">
+                <ToggleButton.Style>
+                    <Style TargetType="ToggleButton">
+                        <Setter Property="Content" Value="{iconPacks:BootstrapIcons Kind=Eye, Width=15, Height=15}" />
+                        <Setter Property="Foreground" Value="LightGray" />
+                        <Setter Property="Background" Value="#222535" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Content" Value="{iconPacks:BootstrapIcons Kind=EyeSlash, Width=15, Height=15}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ToggleButton.Style>
+            </ToggleButton>
+            <ToggleButton Margin="1" Width="18" Height="18"
+                          IsChecked="{Binding IsInSearch}" x:Name="SearchToggle"
+                          Visibility="{Binding Settings.AllowSearch, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <ToggleButton.Style>
+                    <Style TargetType="ToggleButton">
+                        <Setter Property="Content" Value="{iconPacks:BootstrapIcons Kind=Search, Width=13, Height=13}" />
+                        <Setter Property="Foreground" Value="LightGray" />
+                        <Setter Property="Background" Value="#222535" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ToggleButton.Style>
+            </ToggleButton>
         </StackPanel>
 
         <!-- Settings panel -->
-        <WrapPanel Margin="3" d:Visibility="Visible">
+        <WrapPanel Margin="1" d:Visibility="Visible">
             <WrapPanel.Style>
                 <Style TargetType="{x:Type WrapPanel}">
                     <Style.Triggers>
@@ -155,7 +244,6 @@
         </WrapPanel>
 
         <!-- Search popup -->
-
         <Popup IsOpen="{Binding IsInSearch, Mode=OneWay}"
                PlacementTarget="{Binding ElementName=SearchToggle}"
                AllowsTransparency="True"
@@ -326,7 +414,7 @@
                 </Style>
             </WrapPanel.Style>
 
-            <ItemsControl Margin="5" ItemsSource="{Binding ButtonManager}">
+            <ItemsControl Margin="1" ItemsSource="{Binding ButtonManager}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <appBar:AppButtonsPanel
@@ -359,29 +447,57 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate  >
+                    <DataTemplate>
                         <wpf:AppButton Margin="{Binding Settings.AppBarButtonMargin, ElementName=Root}"
-                                             ButtonInfo="{Binding}"
-                                             BuildContextMenuCommand="{Binding DataContext.BuildContextMenuCommand, ElementName=Root}"
-                                             ToolTip="{Binding Path=Title}" 
-                                             VerticalContentAlignment="Center" HorizontalContentAlignment="Left"
-                                             ThumbnailDelay="{Binding Settings.AppBarThumbnailDelayMs, ElementName=Root}">
+                                       FontSize="10"
+                                       ButtonInfo="{Binding}"
+                                       BuildContextMenuCommand="{Binding DataContext.BuildContextMenuCommand, ElementName=Root}"
+                                       ToolTip="{Binding Path=Title}"
+                                       VerticalContentAlignment="Center" HorizontalContentAlignment="Left"
+                                       ThumbnailDelay="{Binding Settings.AppBarThumbnailDelayMs, ElementName=Root}">
                             <wpf:AppButton.Style>
                                 <Style TargetType="{x:Type wpf:AppButton}">
+
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type Button}">
+                                                <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
+                                                    <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#2E2B49" TargetName="Border" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Path=Type}" Value="{x:Type dto:WndInfo}">
                                             <Setter Property="Command" Value="{Binding DataContext.ToggleApplicationWindowCommand, ElementName=Root}" />
                                             <Setter Property="CommandParameter" Value="{Binding Path=Self.(dto:WndInfo.Hwnd)}"></Setter>
                                         </DataTrigger>
+
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Path=Type}" Value="{x:Type dto:WndInfo}" />
+                                                <Condition Binding="{Binding Path=Self.(dto:WndInfo.IsForeground)}" Value="False" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Background" Value="#222535" />
+                                            <Setter Property="Foreground" Value="LightGray" />
+                                            <Setter Property="BorderBrush" Value="#3D3D3D" />
+                                        </MultiDataTrigger>
+
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding Path=Type}" Value="{x:Type dto:WndInfo}" />
                                                 <Condition Binding="{Binding Path=Self.(dto:WndInfo.IsForeground)}" Value="True" />
                                             </MultiDataTrigger.Conditions>
                                             <Setter Property="FontWeight" Value="Bold" />
-                                            <Setter Property="BorderThickness" Value="2" />
-                                            <Setter Property="Background" Value="Navy" />
-                                            <Setter Property="Foreground" Value="White" />
+                                            <Setter Property="Background" Value="#222535" />
+                                            <Setter Property="Foreground" Value="LightGray" />
+                                            <Setter Property="BorderBrush" Value="#7160E8" />
                                         </MultiDataTrigger>
 
                                         <DataTrigger Binding="{Binding Path=Type}" Value="{x:Type dto:PinnedAppInfo}">
@@ -391,7 +507,7 @@
                                             <Setter Property="FontStyle" Value="Italic"/>
                                         </DataTrigger>
                                         <Trigger Property="IsDragAndDropSource" Value="True">
-                                            <Setter Property="Background" Value="#FFB8E4FE" />
+                                            <Setter Property="Background" Value="#7160E8" />
                                         </Trigger>
                                         <Trigger Property="IsDragAndDropTarget" Value="True">
                                             <Setter Property="Background" Value="DarkGray" />
@@ -404,21 +520,21 @@
                                     <MenuItem>Initial menu; this will be replaced ...</MenuItem>
                                 </ContextMenu>
                             </wpf:AppButton.ContextMenu>
-                            <Grid Margin="2">
+                            <Grid Margin="0">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="25" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Image Grid.Column="0" Source="{Binding Path=BitmapSource}" Width="16" Height="16" Stretch="Fill"  Margin="0,0,5,0" />
+                                <Image Grid.Column="0" Source="{Binding Path=BitmapSource}" Width="14" Height="14" Stretch="Fill"  Margin="0,0,5,0" />
                                 <TextBlock Grid.Column="1" Text="{Binding Path=Title}" TextTrimming="CharacterEllipsis"/>
-                                <wpf:ThumbnailPopup 
+                                <wpf:ThumbnailPopup
                                     HorizontalOffset="0"
                                     VerticalOffset="-1"
                                     AllowsTransparency="True"
                                     Width="{Binding Path=Settings.AppBarThumbnailWidth ,ElementName=Root}"
                                     Height="{Binding Path=Settings.AppBarThumbnailHeight ,ElementName=Root}"
                                     PlacementTarget="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type wpf:AppButton}}}">
-                                    <Border BorderThickness="1" BorderBrush="Gainsboro" Background="WhiteSmoke" CornerRadius="5" />
+                                    <Border BorderThickness="1" BorderBrush="#7160E8" Background="#1E1E1E" CornerRadius="5" />
                                     <wpf:ThumbnailPopup.Style>
                                         <Style TargetType="wpf:ThumbnailPopup">
                                             <Style.Triggers>

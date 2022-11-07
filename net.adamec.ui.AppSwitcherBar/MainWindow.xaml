@@ -215,16 +215,16 @@
                 </Style>
             </WrapPanel.Style>
             <StackPanel Orientation="Horizontal" Margin="1" >
-                <iconPacks:PackIconBootstrapIcons Kind="LayoutSidebarInset" Margin="1" VerticalAlignment="Center" />
-                <ComboBox ItemsSource="{Binding Edges}" SelectedItem="{Binding Path=DockMode, ElementName=Root, Mode=TwoWay}" Margin="1" VerticalAlignment="Center" Width="120"  />
+                <iconPacks:PackIconBootstrapIcons Kind="LayoutSidebarInset" Margin="1" VerticalAlignment="Center" Foreground="LightGray" />
+                <ComboBox ItemsSource="{Binding Edges}" SelectedItem="{Binding Path=DockMode, ElementName=Root, Mode=TwoWay}" Margin="1" VerticalAlignment="Center" Width="120" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="1" >
-                <iconPacks:PackIconBootstrapIcons Kind="Display" Margin="1" VerticalAlignment="Center" />
+                <iconPacks:PackIconBootstrapIcons Kind="Display" Margin="1" VerticalAlignment="Center" Foreground="LightGray" />
                 <ComboBox ItemsSource="{Binding AllMonitors}" SelectedItem="{Binding Path=Monitor, ElementName=Root, Mode=TwoWay}" Margin="1" VerticalAlignment="Center" Width="120"  />
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="1" >
-                <iconPacks:PackIconBootstrapIcons Kind="CardList" Margin="1" VerticalAlignment="Center" />
+                <iconPacks:PackIconBootstrapIcons Kind="CardList" Margin="1" VerticalAlignment="Center" Foreground="LightGray" />
                 <Button Content="Refresh" Command="{Binding RefreshWindowCollectionCommand}"  CommandParameter="true" Margin="1" Width="120"/>
             </StackPanel>
 
@@ -232,12 +232,13 @@
                 <CheckBox  Content="Run on Win start" Margin="1" VerticalAlignment="Center" Width="120"
                            Command="{Binding ToggleRunOnStartupCommand}"
                            IsChecked="{Binding RunOnWinStartupSet}"
+                           Foreground="LightGray"
                            Visibility="{Binding RunOnWinStartupAvailable, Converter={StaticResource BooleanToVisibilityConverter}}"
                            />
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="1" >
-                <CheckBox  Content="Auto size" Margin="1" VerticalAlignment="Center" Width="120"
+                <CheckBox  Content="Auto size" Margin="1" VerticalAlignment="Center" Width="120" Foreground="LightGray"
                            IsChecked="{Binding Path=IsAutoSized, ElementName=Root, Mode=TwoWay}"/>
             </StackPanel>
 
@@ -268,13 +269,13 @@
                     </Style.Triggers>
                 </Style>
             </Popup.Style>
-            <Border BorderThickness="1" BorderBrush="Gainsboro" Background="WhiteSmoke" ignore:CornerRadius="5" >
+            <Border BorderThickness="1" BorderBrush="#7160E8" Background="#222535" ignore:CornerRadius="5" >
                 <Grid Margin="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Menu Margin="5" ItemsSource="{Binding SearchResults}" Background="Transparent">
+                    <Menu Margin="5" ItemsSource="{Binding SearchResults}" Background="Transparent" Foreground="LightGray">
                         <ItemsControl.Style>
                             <Style>
                                 <Style.Triggers>
@@ -371,8 +372,10 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <iconPacks:PackIconBootstrapIcons Grid.Column="0" Kind="Search" Margin="1" VerticalAlignment="Center" />
+                        <iconPacks:PackIconBootstrapIcons Grid.Column="0" Kind="Search" Margin="1" VerticalAlignment="Center" Foreground="LightGray"/>
                         <TextBox Grid.Column="1" MinWidth="120"
+                                 Background="#1E1E1E"
+                                 Foreground="LightGray"
                                  Margin="1"
                                  VerticalAlignment="Center"
                                  ignore:xName="SearchBox"

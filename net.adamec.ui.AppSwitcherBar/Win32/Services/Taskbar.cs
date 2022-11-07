@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace net.adamec.ui.AppSwitcherBar.Win32.Services
 {
@@ -18,6 +19,10 @@ namespace net.adamec.ui.AppSwitcherBar.Win32.Services
 
         private const int SW_HIDE = 0;
         private const int SW_SHOW = 1;
+
+        private static bool isVisible = true;
+        private static bool isRefreshStopped = false;
+        private static Task? visibilityHandlingTask = null;
 
         protected static int Handle
         {
@@ -44,14 +49,47 @@ namespace net.adamec.ui.AppSwitcherBar.Win32.Services
 
         public static void Show()
         {
-            _ = ShowWindow(Handle, SW_SHOW);
-            _ = ShowWindow(HandleOfStartButton, SW_SHOW);
+            isVisible = true;
+            RefreshTaskbarVisibility();
         }
 
         public static void Hide()
         {
-            _ = ShowWindow(Handle, SW_HIDE);
-            _ = ShowWindow(HandleOfStartButton, SW_HIDE);
+            isVisible = false;
+            RefreshTaskbarVisibility();
+        }
+
+        public static void StopTaskbarVisibilityRefresh()
+        {
+            isRefreshStopped = true;
+        }
+
+        public static void RefreshTaskbarVisibility()
+        {
+            if (visibilityHandlingTask != null)
+                return;
+
+            visibilityHandlingTask = Task.Factory.StartNew(async () =>
+            {
+                while (!isRefreshStopped)
+                {
+                    if (isVisible)
+                    {
+                        _ = ShowWindow(Handle, SW_SHOW);
+                        _ = ShowWindow(HandleOfStartButton, SW_SHOW);
+                    }
+                    else
+                    {
+                        _ = ShowWindow(Handle, SW_HIDE);
+                        _ = ShowWindow(HandleOfStartButton, SW_HIDE);
+                    }
+                    await Task.Delay(250);
+                }
+
+                _ = ShowWindow(Handle, SW_SHOW);
+                _ = ShowWindow(HandleOfStartButton, SW_SHOW);
+                visibilityHandlingTask = null;
+            }, TaskCreationOptions.LongRunning);
         }
     }
 }

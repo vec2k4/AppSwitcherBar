@@ -20,13 +20,17 @@ namespace net.adamec.ui.AppSwitcherBar
             if (DataContext is MainViewModel viewModel && !IsDesignTime)
             {
                 //initialize the "active" logic of view model - retrieving the information about windows
-                Loaded += (_, _) => viewModel.Init(Hwnd);
+                Loaded += (_, _) =>
+                {
+                    Taskbar.Show();
+                    viewModel.Init(Hwnd);
+                };
             }
         }
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            Taskbar.Show();
+            Taskbar.StopTaskbarVisibilityRefresh();
             base.OnClosing(e);
         }
     }

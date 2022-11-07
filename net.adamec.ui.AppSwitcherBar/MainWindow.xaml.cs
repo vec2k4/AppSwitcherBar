@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Options;
 using net.adamec.ui.AppSwitcherBar.Config;
 using net.adamec.ui.AppSwitcherBar.ViewModel;
+using net.adamec.ui.AppSwitcherBar.Win32.Services;
+using System.ComponentModel;
 
 namespace net.adamec.ui.AppSwitcherBar
 {
@@ -20,6 +22,12 @@ namespace net.adamec.ui.AppSwitcherBar
                 //initialize the "active" logic of view model - retrieving the information about windows
                 Loaded += (_, _) => viewModel.Init(Hwnd);
             }
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            Taskbar.Show();
+            base.OnClosing(e);
         }
     }
 }

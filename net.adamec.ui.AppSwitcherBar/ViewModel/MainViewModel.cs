@@ -60,12 +60,12 @@ namespace net.adamec.ui.AppSwitcherBar.ViewModel
         private readonly BackgroundWorker backgroundInitWorker;
 
         /// <summary>
-        /// Flag whether the background data have been retrieved 
+        /// Flag whether the background data have been retrieved
         /// </summary>
         private bool backgroundDataRetrieved;
 
         /// <summary>
-        /// Flag whether the background data have been retrieved 
+        /// Flag whether the background data have been retrieved
         /// </summary>
         public bool BackgroundDataRetrieved
         {
@@ -145,13 +145,37 @@ namespace net.adamec.ui.AppSwitcherBar.ViewModel
             }
         }
 
+        private bool isWindowsTaskbarHidden;
+
+        public bool IsWindowsTaskbarHidden
+        {
+            get => isWindowsTaskbarHidden;
+            set
+            {
+                if (isWindowsTaskbarHidden != value)
+                {
+                    isWindowsTaskbarHidden = value;
+                    if (isWindowsTaskbarHidden)
+                    {
+                        Taskbar.Hide();
+                    }
+                    else
+                    {
+                        Taskbar.Show();
+                        Application.Current.MainWindow.Focus();
+                    }
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         /// <summary>
-        /// Flag whether the search is in progress 
+        /// Flag whether the search is in progress
         /// </summary>
         private bool isInSearch;
 
         /// <summary>
-        /// Flag whether the search is in progress 
+        /// Flag whether the search is in progress
         /// </summary>
         public bool IsInSearch
         {
@@ -180,7 +204,7 @@ namespace net.adamec.ui.AppSwitcherBar.ViewModel
         private bool hasSearchResults;
 
         /// <summary>
-        /// Flag whether the search has results 
+        /// Flag whether the search has results
         /// </summary>
         public bool HasSearchResults
         {
@@ -302,7 +326,7 @@ namespace net.adamec.ui.AppSwitcherBar.ViewModel
         /// <summary>
         /// Map used for simple anonymization
         /// </summary>
-        /// 
+        ///
         private readonly Dictionary<char, char> anonymizeMap = new();
 
         /// <summary>
@@ -495,7 +519,7 @@ namespace net.adamec.ui.AppSwitcherBar.ViewModel
         }
 
         /// <summary>
-        /// Called when the background data have been retrieved - "copy" them to view model 
+        /// Called when the background data have been retrieved - "copy" them to view model
         /// </summary>
         /// <param name="data">Retrieved background data or null when not available</param>
         internal void OnBackgroundDataRetrieved(BackgroundData? data)
@@ -586,7 +610,7 @@ namespace net.adamec.ui.AppSwitcherBar.ViewModel
                     //Check whether it's a "new" application window or a one already existing in the ButtonManager
                     if (wnd == null)
                     {
-                        //app executable 
+                        //app executable
                         var executable = WndAndApp.GetProcessExecutable(ptrProcess);
                         //new window
                         wnd = new WndInfo(hwnd, caption, threadId, processId, executable);
@@ -615,7 +639,7 @@ namespace net.adamec.ui.AppSwitcherBar.ViewModel
                             appUserModelId = WndAndApp.GetWindowApplicationUserModelId(hwnd);
                         }
 
-                        //Try to get AppUserModelId from window - for windows that explicitly define the AppId 
+                        //Try to get AppUserModelId from window - for windows that explicitly define the AppId
                         if (appUserModelId == null)
                         {
                             var store = Shell.GetPropertyStoreForWindow(wnd.Hwnd);
@@ -624,7 +648,7 @@ namespace net.adamec.ui.AppSwitcherBar.ViewModel
                                 var hr = store.GetCount(out var c);
                                 if (hr.IsSuccess && c > 0)
                                 {
-                                    //try to get AppUserModelId property 
+                                    //try to get AppUserModelId property
                                     appUserModelId = store.GetPropertyValue<string>(PropertyKey.PKEY_AppUserModel_ID);
                                     var shellProperties = store.GetProperties();
                                     wnd.ShellProperties = shellProperties;
@@ -1232,7 +1256,7 @@ namespace net.adamec.ui.AppSwitcherBar.ViewModel
         }
 
         /// <summary>
-        /// Process the special key for search 
+        /// Process the special key for search
         /// Parameter <paramref name="param"/> must be <see cref="Key"/> value
         /// </summary>
         /// <param name="param"><see cref="Key"/> pressed </param>

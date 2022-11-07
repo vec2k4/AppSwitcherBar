@@ -15,7 +15,7 @@
     x:Name="Root"
     Title="MainWindow"
     Background="#1E1E1E"
-    Icon="/AppSwitcherBar.ico" >
+    Icon="/AppSwitcherBar.ico" Height="58" >
     <appBar:AppBarWindow.Resources>
         <viewModel:ViewModelLocator x:Key="ViewModelLocator" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
@@ -243,6 +243,40 @@
             </StackPanel>
 
         </WrapPanel>
+
+        <!-- Clock -->
+        <Grid VerticalAlignment="Stretch" Margin="0,0,5,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="11"/>
+                <RowDefinition Height="11"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.Style>
+                <Style TargetType="{x:Type Grid}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=DockMode, ElementName=Root}" Value="Left">
+                            <Setter Property="DockPanel.Dock" Value="Bottom" />
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=DockMode, ElementName=Root}" Value="Right">
+                            <Setter Property="DockPanel.Dock" Value="Bottom" />
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=DockMode, ElementName=Root}" Value="Top">
+                            <Setter Property="DockPanel.Dock" Value="Right" />
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=DockMode, ElementName=Root}" Value="Bottom">
+                            <Setter Property="DockPanel.Dock" Value="Right" />
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <TextBlock Grid.Row="1" Text="{Binding CurrentTime}" FontSize="10" Foreground="LightGray" HorizontalAlignment="Right"/>
+            <TextBlock Grid.Row="2" Text="{Binding CurrentDate}" FontSize="10" Foreground="LightGray" HorizontalAlignment="Right"/>
+        </Grid>
 
         <!-- Search popup -->
         <Popup IsOpen="{Binding IsInSearch, Mode=OneWay}"

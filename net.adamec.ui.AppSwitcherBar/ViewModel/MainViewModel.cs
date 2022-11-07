@@ -169,6 +169,37 @@ namespace net.adamec.ui.AppSwitcherBar.ViewModel
             }
         }
 
+        private string currentDate = "dd.MM.YYYY";
+
+        public string CurrentDate
+        {
+            get => currentDate;
+            set
+            {
+                if (!currentDate.Equals(value))
+                {
+                    currentDate = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private string currentTime = "HH:mm:ss";
+
+        public string CurrentTime
+        {
+            get => currentTime;
+            set
+            {
+                if (!currentTime.Equals(value))
+                {
+                    currentTime = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+
         /// <summary>
         /// Flag whether the search is in progress
         /// </summary>
@@ -376,6 +407,8 @@ namespace net.adamec.ui.AppSwitcherBar.ViewModel
             backgroundInitWorker.DoWork += (_, eventArgs) => { eventArgs.Result = RetrieveBackgroundData(); };
             backgroundInitWorker.RunWorkerCompleted += (_, eventArgs) => { OnBackgroundDataRetrieved((BackgroundData)eventArgs.Result!); };
             this.startupService = startupService;
+
+            DateTimeRefresh.StartRefreshing(this);
         }
 
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using net.adamec.ui.AppSwitcherBar.Config;
+using net.adamec.ui.AppSwitcherBar.Dto;
 using net.adamec.ui.AppSwitcherBar.ViewModel;
 using net.adamec.ui.AppSwitcherBar.Win32.Services;
 using System.ComponentModel;
@@ -31,6 +32,7 @@ namespace net.adamec.ui.AppSwitcherBar
         protected override void OnClosing(CancelEventArgs e)
         {
             Taskbar.StopTaskbarVisibilityRefresh();
+            DateTimeRefresh.StopRefreshing();
             base.OnClosing(e);
         }
     }
